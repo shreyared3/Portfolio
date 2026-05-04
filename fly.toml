@@ -1,0 +1,51 @@
+# fly.toml app configuration file generated for ai-portfolio
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+
+app = "shreyared3-portfolio"
+primary_region = "iad"  # Change to your preferred region
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  NODE_ENV = "production"
+  PORT = 8080
+  AI_PROVIDER = "mistral"
+  MISTRAL_MODEL = "mistral-small-latest"
+
+  # Rate Limiting
+  RATE_LIMIT_WINDOW_MS = 900000          # 15 minutes
+  RATE_LIMIT_MAX_REQUESTS = 100
+  MAX_REQUESTS_PER_IP = 30
+  IP_RATE_LIMIT_WINDOW_MS = 86400000     # 24 hours
+  MIN_REQUEST_INTERVAL_MS = 2000
+  ADMIN_IPS = ""                          # Comma-separated whitelist, if any
+
+  # Caching
+  CACHE_DURATION_MS = 172800000           # 48 hours
+  EMBEDDING_REQUEST_TIMEOUT_MS = 30000   # 30 seconds
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [[http_service.checks]]
+    grace_period = "10s"
+    interval = "30s"
+    method = "GET"
+    timeout = "5s"
+    path = "/health"
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 256
+
+#[mounts]
+#source="storage"
+#destination="/app/backend/storage"
