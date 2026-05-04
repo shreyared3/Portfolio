@@ -1,0 +1,85 @@
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+dotenv.config({ path: join(__dirname, "../../.env") });
+
+// AI Configuration - Change provider and model here
+
+export const AI_CONFIG = {
+  // Active provider: 'ollama' | 'openai' | 'huggingface' | 'gemini' | 'anthropic'
+  provider: "mistral",
+
+  fallbacks: [],
+
+  // Provider-specific settings
+  providers: {
+    // ollama: {
+    //   url: process.env.OLLAMA_URL || "http://localhost:11434",
+    //   model: process.env.OLLAMA_MODEL || "llama3.2:1b",
+    //   timeout: 30000,
+    //   options: {
+    //     temperature: 0.8,
+    //     top_p: 0.9,
+    //     num_predict: 800,
+    //   },
+    // },
+
+    // openai: {
+    //   apiKey: process.env.OPENAI_API_KEY,
+    //   model: process.env.OPENAI_MODEL || "gpt-3.5-turbo",
+    //   url: "https://api.openai.com/v1/chat/completions",
+    //   timeout: 30000,
+    //   options: {
+    //     temperature: 0.8,
+    //     max_tokens: 200,
+    //   },
+    // },
+
+    // huggingface: {
+    //   apiKey: process.env.HUGGINGFACE_API_KEY,
+    //   model: process.env.HUGGINGFACE_MODEL || "microsoft/DialoGPT-medium",
+    //   url: "https://api-inference.huggingface.co/models",
+    //   timeout: 30000,
+    //   options: {
+    //     temperature: 0.8,
+    //     max_new_tokens: 200,
+    //   },
+    // },
+
+    // gemini: {
+    //   apiKey: process.env.GEMINI_API_KEY,
+    //   model: process.env.GEMINI_MODEL || "gemini-2.0-flash-lite",
+    //   url: "https://generativelanguage.googleapis.com/v1beta/models",
+    //   timeout: 30000,
+    //   options: {
+    //     temperature: 0.8,
+    //     maxOutputTokens: 800,
+    //   },
+    // },
+
+    mistral: {
+      apiKey: process.env.MISTRAL_API_KEY,
+      model: process.env.MISTRAL_MODEL || "mistral-small-latest",
+      url: "https://api.mistral.ai/v1/chat/completions",
+      timeout: 30000,
+      options: {
+        temperature: 0.8,
+        max_tokens: 800,
+      },
+    },
+
+    // anthropic: {
+    //   apiKey: process.env.ANTHROPIC_API_KEY,
+    //   model: process.env.ANTHROPIC_MODEL || "claude-3-haiku-20240307",
+    //   url: "https://api.anthropic.com/v1/messages",
+    //   timeout: 30000,
+    //   options: {
+    //     temperature: 0.8,
+    //     max_tokens: 200,
+    //   },
+    // },
+  },
+};
