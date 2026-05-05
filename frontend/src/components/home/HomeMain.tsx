@@ -14,7 +14,7 @@ const HomeMain: React.FC = () => {
           WebkitBackdropFilter: "blur(24px)",
           border: "1px solid rgba(255, 255, 255, 0.12)",
           borderRadius: 24,
-          padding: "48px 40px",
+          padding: "clamp(20px, 5vw, 48px) clamp(16px, 4vw, 40px)",
           boxShadow: "0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08)",
           maxWidth: 900,
           width: "100%",
@@ -28,8 +28,8 @@ const HomeMain: React.FC = () => {
           <motion.div
             className="home-avatar rounded-full overflow-hidden flex-shrink-0"
             style={{
-              width: 200,
-              height: 200,
+              width: "clamp(120px, 30vw, 200px)",
+              height: "clamp(120px, 30vw, 200px)",
               boxShadow: "0 0 0 4px rgba(255,255,255,0.15), 0 0 0 8px rgba(139,92,246,0.2), 0 16px 48px rgba(0,0,0,0.4)",
             }}
             initial={{ opacity: 0, scale: 0.8 }}

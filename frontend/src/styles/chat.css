@@ -136,6 +136,35 @@
   padding-bottom: 32px;
 }
 
+@media (max-width: 768px) {
+  .chat-main {
+    padding-top: 80px;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-bottom: 16px;
+  }
+
+  .chat-input-container {
+    width: 98% !important;
+  }
+
+  .question-text {
+    font-size: 18px !important;
+  }
+
+  .response-text {
+    font-size: 15px !important;
+  }
+
+  .response-wrapper {
+    max-width: 100%;
+  }
+
+  .chat-content-wrapper {
+    padding: 0;
+  }
+}
+
 .chat-content-wrapper {
   max-width: 64rem;
   margin: 0 auto;

@@ -45,15 +45,7 @@ const Chat: React.FC<ChatProps> = ({ onBackToHome, initialQuery }) => {
         <ChatHeader onBackToHome={onBackToHome} />
 
         {/* Main Content */}
-        <main
-          className="chat-main"
-          style={{
-            paddingTop: 96,
-            paddingLeft: 32,
-            paddingRight: 32,
-            paddingBottom: 32,
-          }}
-        >
+        <main className="chat-main">
           <div
             className="chat-content-wrapper"
             style={{ maxWidth: "64rem", margin: "0 auto" }}
