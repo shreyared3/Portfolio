@@ -19,7 +19,7 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({ showHeader, onModalStateChange 
       transition={{ duration: 0.8, ease: "easeOut" }}
       className="home-header"
       style={{
-        position: 'absolute',
+        position: 'fixed',
         top: 0,
         left: 0,
         right: 0,
@@ -27,7 +27,9 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({ showHeader, onModalStateChange 
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: 24
+        flexWrap: 'wrap',
+        gap: 8,
+        padding: 'clamp(12px, 3vw, 24px)',
       }}
     >
       {/* Apple Carousel */}

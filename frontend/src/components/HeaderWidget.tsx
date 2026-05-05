@@ -3,7 +3,7 @@ import { FaGithub, FaLinkedin } from "react-icons/fa";
 const HeaderWidget = () => {
   return (
     <div
-      className="absolute top-4 right-4 z-20 flex gap-4 p-3 rounded-2xl"
+      className="flex gap-4 p-3 rounded-2xl"
       style={{
         background: "rgba(255,255,255,0.1)",
         backdropFilter: "blur(20px)",

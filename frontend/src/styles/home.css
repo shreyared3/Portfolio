@@ -55,7 +55,7 @@
 
 /* Header Styles */
 .home-header {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -74,6 +74,14 @@
   min-height: 80vh;
   padding-left: 8px;
   padding-right: 8px;
+  padding-top: 80px;
+}
+
+@media (max-width: 768px) {
+  .home-main {
+    padding-top: 100px;
+    min-height: auto;
+  }
 }
 
 .home-content-wrapper {
@@ -226,10 +234,10 @@
 .bottom-nav-grid {
   display: flex;
   justify-content: space-around;
-  gap: 24px;
+  gap: 12px;
   max-width: 32rem;
   margin: 0 auto;
-  /* flex-wrap: wrap;  */
+  flex-wrap: wrap;
 }
 
 .bottom-nav-button {
