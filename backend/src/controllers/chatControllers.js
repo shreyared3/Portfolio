@@ -147,6 +147,8 @@ export async function chatHandler(req, res) {
         indexData.documents.find((d) => d.id === s.id)
       ).filter(Boolean);
 
+      const isSalaryQuestion = /\b(salary|compensation|pay|rate|expectation|how much|what do you (expect|want|make)|package)\b/i.test(message);
+
       const context = topDocs.map((doc) => {
         const meta = doc.metadata || {};
         if (meta.section === "projects" || meta.section === "experience") {
@@ -154,6 +156,12 @@ export async function chatHandler(req, res) {
         }
         if (meta.section === "skills") {
           return `[SKILLS] ${meta.category}: ${(meta.items || []).join(", ")}`;
+        }
+        if (meta.section === "availability") {
+          const base = `[AVAILABILITY] ${doc.content}`;
+          return isSalaryQuestion && meta.salaryExpectation
+            ? `${base}\nSalary expectation: ${meta.salaryExpectation}`
+            : base;
         }
         return `[${(meta.section || "").toUpperCase()}] ${doc.content}`;
       }).join("\n\n");

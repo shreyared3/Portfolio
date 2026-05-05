@@ -1,58 +1,125 @@
 {
   "about": {
     "title": "About Me",
-    "content": "I am Shreya Reddy, a Senior AI/ML Engineer with 4+ years building production ML systems across healthcare, fintech, and telecom. I specialize in end-to-end MLOps, real-time feature engineering, LLM-powered RAG applications, and multi-model ensemble deployment on AWS SageMaker and Google Cloud Vertex AI. I have a track record of 30–50% efficiency gains and multi-million-dollar revenue impact through scalable ML infrastructure, GenAI agents, and regulatory-compliant model governance."
+    "content": "I am Shreya Reddy, a Senior AI/ML Engineer with 4+ years building production ML systems across healthcare, fintech, and telecom. I specialize in end-to-end MLOps, real-time feature engineering, LLM-powered RAG applications, and multi-model ensemble deployment on AWS SageMaker and Google Cloud Vertex AI. I have a track record of 30\u201350% efficiency gains and multi-million-dollar revenue impact through scalable ML infrastructure, GenAI agents, and regulatory-compliant model governance."
   },
-
   "skills": {
     "title": "Skills & Expertise",
     "content": "I have a diverse skill set spanning ML/AI, data engineering, cloud platforms, MLOps, and full-stack development.",
     "categories": [
       {
         "title": "ML & AI",
-        "items": ["XGBoost", "LightGBM", "Gradient Boosting", "LSTM", "PyTorch", "HuggingFace Transformers", "Scikit-learn", "LangChain", "LangGraph", "SHAP", "Pinecone", "FAISS", "OpenAI API", "RAG", "Fine-tuning", "TensorFlow"]
+        "items": [
+          "XGBoost",
+          "LightGBM",
+          "Gradient Boosting",
+          "LSTM",
+          "PyTorch",
+          "HuggingFace Transformers",
+          "Scikit-learn",
+          "LangChain",
+          "LangGraph",
+          "SHAP",
+          "Pinecone",
+          "FAISS",
+          "OpenAI API",
+          "RAG",
+          "Fine-tuning",
+          "TensorFlow"
+        ]
       },
       {
         "title": "Languages",
-        "items": ["Python", "SQL", "PySpark", "Bash", "Scala", "Java", "JavaScript"]
+        "items": [
+          "Python",
+          "SQL",
+          "PySpark",
+          "Bash",
+          "Scala",
+          "Java",
+          "JavaScript"
+        ]
       },
       {
         "title": "Cloud & Platforms",
-        "items": ["AWS SageMaker", "Google Cloud Vertex AI", "BigQuery", "Snowflake", "Databricks", "Azure ML", "AWS EC2", "S3"]
+        "items": [
+          "AWS SageMaker",
+          "Google Cloud Vertex AI",
+          "BigQuery",
+          "Snowflake",
+          "Databricks",
+          "Azure ML",
+          "AWS EC2",
+          "S3"
+        ]
       },
       {
         "title": "Data Engineering",
-        "items": ["Apache Kafka", "Apache Spark", "Airflow", "AWS Glue", "Amazon Redshift", "Pub/Sub", "dbt"]
+        "items": [
+          "Apache Kafka",
+          "Apache Spark",
+          "Airflow",
+          "AWS Glue",
+          "Amazon Redshift",
+          "Pub/Sub",
+          "dbt"
+        ]
       },
       {
         "title": "MLOps & Deployment",
-        "items": ["MLflow", "Evidently AI", "Docker", "Kubernetes", "FastAPI", "Cloud Run", "Apigee", "CI/CD", "Git", "Terraform", "Jenkins"]
+        "items": [
+          "MLflow",
+          "Evidently AI",
+          "Docker",
+          "Kubernetes",
+          "FastAPI",
+          "Cloud Run",
+          "Apigee",
+          "CI/CD",
+          "Git",
+          "Terraform",
+          "Jenkins"
+        ]
       },
       {
         "title": "Databases",
-        "items": ["MySQL", "MongoDB", "PostgreSQL", "Neo4j"]
+        "items": [
+          "MySQL",
+          "MongoDB",
+          "PostgreSQL",
+          "Neo4j"
+        ]
       },
       {
         "title": "Frontend",
-        "items": ["React", "Next.js", "TailwindCSS", "JavaScript", "HTML", "CSS"]
+        "items": [
+          "React",
+          "Next.js",
+          "TailwindCSS",
+          "JavaScript",
+          "HTML",
+          "CSS"
+        ]
       },
       {
         "title": "Backend",
-        "items": ["Node.js", "Express.js", "Flask", "Spring Boot"]
+        "items": [
+          "Node.js",
+          "Express.js",
+          "Flask",
+          "Spring Boot"
+        ]
       }
     ]
   },
-
   "education": {
     "title": "Education",
-    "content": "I hold a Master of Science in Data Analytics Engineering from George Mason University, Fairfax, VA (Aug 2023 – May 2025) and a Bachelor of Technology in Information Technology from Jawaharlal Nehru Technological University, Hyderabad, India (Aug 2019 – Jun 2023)."
+    "content": "I hold a Master of Science in Data Analytics Engineering from George Mason University, Fairfax, VA (Aug 2023 \u2013 May 2025) and a Bachelor of Technology in Information Technology from Jawaharlal Nehru Technological University, Hyderabad, India (Aug 2019 \u2013 Jun 2023)."
   },
-
   "fun": {
     "title": "Fun & Hobbies",
-    "content": "In my free time, I love going for walks and runs — it's my way of clearing my head and staying energized. I'm also a big café explorer! Discovering new coffee spots and trying different brews is something I genuinely look forward to. Doodling is my favorite hobby — I can lose track of time just sketching random things. And when I'm at home, I love organizing and styling my space to make it feel just right, because a well-arranged space genuinely lifts my mood and helps me feel my best."
+    "content": "In my free time, I love going for walks and runs \u2014 it's my way of clearing my head and staying energized. I'm also a big caf\u00e9 explorer! Discovering new coffee spots and trying different brews is something I genuinely look forward to. Doodling is my favorite hobby \u2014 I can lose track of time just sketching random things. And when I'm at home, I love organizing and styling my space to make it feel just right, because a well-arranged space genuinely lifts my mood and helps me feel my best."
   },
-
   "experience": {
     "title": "Professional Experience",
     "content": "I have experience building production ML systems across healthcare, fintech, and telecom, contributing to both AI/ML engineering and data engineering roles.",
@@ -60,7 +127,7 @@
       {
         "role": "AI/ML Engineer",
         "company": "Cardinal Health",
-        "period": "Jun 2024 – Present",
+        "period": "Jun 2024 \u2013 Present",
         "location": "Dublin, OH",
         "highlights": [
           "Migrated pharmaceutical supply chain ML pipelines from Databricks to Google Cloud Vertex AI, rebuilding drug shortage risk scoring using XGBoost and LSTM ensemble for scalable production deployment",
@@ -72,7 +139,7 @@
       {
         "role": "Machine Learning Engineer",
         "company": "Discover Financial Services",
-        "period": "May 2024 – Jun 2024",
+        "period": "May 2024 \u2013 Jun 2024",
         "location": "Riverwoods, IL",
         "highlights": [
           "Developed a three-model credit risk scoring system on AWS SageMaker for card application decisioning, limit optimization, and collections propensity using XGBoost, LightGBM, and Gradient Boosting",
@@ -84,7 +151,7 @@
       {
         "role": "Data Engineer",
         "company": "Tech Mahindra",
-        "period": "Sep 2020 – Jul 2023",
+        "period": "Sep 2020 \u2013 Jul 2023",
         "location": "Hyderabad, India",
         "highlights": [
           "Built batch ingestion pipelines using AWS Glue and PySpark to migrate telecom customer usage and billing data from on-prem Oracle systems into Amazon S3",
@@ -94,14 +161,23 @@
       }
     ]
   },
-
   "projects": {
     "title": "Projects",
     "content": "My projects span AI-powered portfolio applications, production ML systems in healthcare and fintech, and large-scale data engineering pipelines in telecom.",
     "items": [
       {
-        "name": "AI Portfolio — This Website",
-        "technologies": ["React", "Node.js", "Express", "TailwindCSS", "LangChain", "Mistral AI", "RAG", "Vector Search", "Framer Motion"],
+        "name": "AI Portfolio \u2014 This Website",
+        "technologies": [
+          "React",
+          "Node.js",
+          "Express",
+          "TailwindCSS",
+          "LangChain",
+          "Mistral AI",
+          "RAG",
+          "Vector Search",
+          "Framer Motion"
+        ],
         "highlights": [
           "Built a fully interactive AI-powered personal portfolio where an LLM answers questions about my background, skills, and experience in real time",
           "Implemented a RAG pipeline using Mistral embeddings and vector similarity search over a structured knowledge base to ground AI responses in accurate personal data",
@@ -112,8 +188,20 @@
         "github": "https://github.com/shreyared3/ai-portfolio"
       },
       {
-        "name": "Pharmaceutical Supply Chain ML System — Cardinal Health",
-        "technologies": ["XGBoost", "LSTM", "LangChain", "Pinecone", "Google Cloud Vertex AI", "Pub/Sub", "Apache Kafka", "BigQuery", "Cloud Run", "Apigee", "Python"],
+        "name": "Pharmaceutical Supply Chain ML System \u2014 Cardinal Health",
+        "technologies": [
+          "XGBoost",
+          "LSTM",
+          "LangChain",
+          "Pinecone",
+          "Google Cloud Vertex AI",
+          "Pub/Sub",
+          "Apache Kafka",
+          "BigQuery",
+          "Cloud Run",
+          "Apigee",
+          "Python"
+        ],
         "highlights": [
           "Migrated pharmaceutical supply chain ML pipelines from Databricks to Google Cloud Vertex AI, rebuilding drug shortage risk scoring using an XGBoost and LSTM ensemble",
           "Designed real-time feature pipelines on Pub/Sub and Kafka ingesting EHR events, supplier fill-rate streams, and external signals into BigQuery with sub 3-minute feature latency",
@@ -122,8 +210,17 @@
         ]
       },
       {
-        "name": "Credit Risk Scoring System — Discover Financial Services",
-        "technologies": ["XGBoost", "LightGBM", "Gradient Boosting", "AWS SageMaker", "SageMaker Feature Store", "SageMaker Clarify", "MLflow", "Python"],
+        "name": "Credit Risk Scoring System \u2014 Discover Financial Services",
+        "technologies": [
+          "XGBoost",
+          "LightGBM",
+          "Gradient Boosting",
+          "AWS SageMaker",
+          "SageMaker Feature Store",
+          "SageMaker Clarify",
+          "MLflow",
+          "Python"
+        ],
         "highlights": [
           "Developed a three-model credit risk scoring system on AWS SageMaker for card application decisioning, limit optimization, and collections propensity",
           "Engineered a centralized feature store on SageMaker Feature Store with payment ratio, utilization trend, and delinquency history signals across batch and real-time workloads",
@@ -132,8 +229,16 @@
         ]
       },
       {
-        "name": "Telecom Data Engineering Pipeline — Tech Mahindra",
-        "technologies": ["AWS Glue", "PySpark", "Amazon Redshift", "Apache Airflow", "Amazon S3", "SQL", "Python"],
+        "name": "Telecom Data Engineering Pipeline \u2014 Tech Mahindra",
+        "technologies": [
+          "AWS Glue",
+          "PySpark",
+          "Amazon Redshift",
+          "Apache Airflow",
+          "Amazon S3",
+          "SQL",
+          "Python"
+        ],
         "highlights": [
           "Built batch ingestion pipelines using AWS Glue and PySpark to migrate telecom customer usage and billing data from on-prem Oracle systems into Amazon S3",
           "Designed Redshift data warehouse tables and optimized SQL transformation scripts to support incremental loads for churn and revenue analytics",
@@ -142,13 +247,12 @@
       }
     ]
   },
-
   "availability": {
     "title": "Job Availability & Career",
-    "content": "I am currently open to new opportunities in AI/ML Engineering, MLOps, and Data Engineering. I am actively looking for full-time roles where I can contribute to production ML systems, GenAI applications, and scalable data infrastructure. My ideal role involves LLM-powered pipelines, cloud ML platforms like AWS SageMaker or Google Cloud Vertex AI, and real-world impact across industries like healthcare, fintech, or tech. I completed my Master of Science in Data Analytics Engineering from George Mason University in May 2025 and am based in the US with full work authorization. I can start immediately or within a short notice period depending on the role. My salary expectation is $120,000 per year.",
-    "careerGap": "There is no significant experience gap in my career. After completing my role at Tech Mahindra in July 2023, I transitioned directly into my Master's program at George Mason University starting August 2023. During graduate school, I also gained industry experience — I worked as a Machine Learning Engineer at Discover Financial Services in May–June 2024 and joined Cardinal Health as an AI/ML Engineer in June 2024. So my graduate studies and professional work overlapped, and I have been continuously building production ML skills throughout."
+    "content": "I am currently open to new opportunities in AI/ML Engineering, MLOps, and Data Engineering. I am actively looking for full-time roles where I can contribute to production ML systems, GenAI applications, and scalable data infrastructure. My ideal role involves LLM-powered pipelines, cloud ML platforms like AWS SageMaker or Google Cloud Vertex AI, and real-world impact across industries like healthcare, fintech, or tech. I completed my Master of Science in Data Analytics Engineering from George Mason University in May 2025 and am based in the US with full work authorization. I can start immediately or within a short notice period depending on the role.",
+    "careerGap": "There is no significant experience gap in my career. After completing my role at Tech Mahindra in July 2023, I transitioned directly into my Master's program at George Mason University starting August 2023. During graduate school, I also gained industry experience \u2014 I worked as a Machine Learning Engineer at Discover Financial Services in May\u2013June 2024 and joined Cardinal Health as an AI/ML Engineer in June 2024. So my graduate studies and professional work overlapped, and I have been continuously building production ML skills throughout.",
+    "salaryExpectation": "$120,000 per year"
   },
-
   "contact": {
     "title": "Contact",
     "content": "You can reach me directly via email or phone, and explore my work on LinkedIn and GitHub.",
