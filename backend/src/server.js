@@ -47,7 +47,7 @@ app.use(
 const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",") || [
   "http://localhost:3000",
   "http://localhost:8000",
-  "https://ai-portfolio.fly.dev",
+  "https://shreyared3-portfolio.fly.dev",
 ];
 
 app.use(

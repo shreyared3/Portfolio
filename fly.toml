@@ -11,6 +11,7 @@ primary_region = "iad"  # Change to your preferred region
 [env]
   NODE_ENV = "production"
   PORT = 8080
+  ALLOWED_ORIGINS = "https://shreyared3-portfolio.fly.dev"
   AI_PROVIDER = "mistral"
   MISTRAL_MODEL = "mistral-small-latest"
 
