@@ -197,6 +197,20 @@ ${isComparison
     }
   } catch (err) {
     console.error(`Chat handler error:`, err.message);
+
+    const isOverloaded =
+      err.message.includes("429") ||
+      err.message.includes("capacity exceeded") ||
+      err.message.includes("Too Many Requests") ||
+      err.message.includes("service_tier_capacity_exceeded");
+
+    if (isOverloaded) {
+      return res.status(503).json({
+        error: "service_overloaded",
+        message: "The AI service is a little busy right now. Please wait a few seconds and try again. 🙏",
+      });
+    }
+
     res.status(500).json({
       error: "Failed to process chat message",
       details: process.env.NODE_ENV === "development" ? err.message : undefined,

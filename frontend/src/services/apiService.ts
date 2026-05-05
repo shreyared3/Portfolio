@@ -7,9 +7,9 @@ export const apiService = {
       credentials: "include",
     });
     if (!res.ok) {
-      // Handle rate limiting gracefully
+      const errorData = await res.json().catch(() => ({}));
+
       if (res.status === 429) {
-        const errorData = await res.json().catch(() => ({}));
         const resetTime = errorData.resetTime
           ? new Date(errorData.resetTime).toLocaleTimeString()
           : "later";
@@ -19,8 +19,14 @@ export const apiService = {
         );
       }
 
-      const text = await res.text();
-      throw new Error(text || "Failed to send message");
+      if (res.status === 503) {
+        throw new Error(
+          errorData.message ||
+            "The AI service is a little busy right now. Please wait a few seconds and try again. 🙏"
+        );
+      }
+
+      throw new Error(errorData.error || "Something went wrong. Please try again.");
     }
     return res.json();
   },
