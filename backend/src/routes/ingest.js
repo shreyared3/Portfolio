@@ -118,6 +118,7 @@ export async function ingestData() {
       {
         section: "availability",
         careerGap: knowledge.availability.careerGap,
+        salaryExpectation: knowledge.availability.salaryExpectation,
       }
     );
   }

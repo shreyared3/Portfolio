@@ -58,18 +58,24 @@ export const useChat = (initialQuery?: string) => {
         const errorMessage =
           err?.message || "Something went wrong. Please try again.";
 
-        // Check if rate limited (429 error)
-        if (
+        const isHardRateLimit =
           errorMessage.includes("explored quite a bit") ||
-          errorMessage.includes("rate limit")
-        ) {
+          errorMessage.includes("rate limit");
+
+        const isServiceBusy =
+          errorMessage.includes("busy right now") ||
+          errorMessage.includes("wait a few seconds");
+
+        if (isHardRateLimit) {
           setIsRateLimited(true);
           setRateLimitMessage(errorMessage);
         }
 
         setCurrentInteraction({
           ...newInteraction,
-          response: errorMessage,
+          response: isServiceBusy
+            ? "⚠️ " + errorMessage
+            : errorMessage,
           structured: undefined,
           isLoading: false,
         });
