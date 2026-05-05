@@ -24,7 +24,7 @@ import {
 import { trackRequest, getUsageStats } from "./lib/usageTracker.js";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 
 // ----------------- Trust Proxy -----------------
 app.set("trust proxy", 1); // trust the first proxy (needed for Fly.io, Heroku, etc.)
