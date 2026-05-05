@@ -68,10 +68,10 @@ cd backend && npm run ingest
 5. Start both backends:
 
 ```bash
-# Frontend (http://localhost:8000)
+# Frontend (http://localhost:3000)
 cd frontend && npm run dev
 
-# Backend (http://localhost:3000) — separate terminal
+# Backend (http://localhost:8000) — separate terminal
 cd backend && npm run dev
 ```
 
