@@ -1,9 +1,12 @@
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 import { getEmbedding } from "../lib/embeddings.js";
 
-const knowledgePath = path.join(process.cwd(), "data", "knowledge.json");
-const indexStorePath = path.join(process.cwd(), "storage", "indexStore.json");
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const knowledgePath = path.join(__dirname, "../../data", "knowledge.json");
+const indexStorePath = path.join(__dirname, "../../storage", "indexStore.json");
 
 async function addDocument(index, id, type, title, content, metadata = {}) {
   if (!content || !content.trim()) return;
@@ -121,6 +124,20 @@ export async function ingestData() {
         salaryExpectation: knowledge.availability.salaryExpectation,
       }
     );
+  }
+
+  if (knowledge.aiModels?.items) {
+    for (let i = 0; i < knowledge.aiModels.items.length; i++) {
+      const model = knowledge.aiModels.items[i];
+      await addDocument(
+        index,
+        `aimodel:${i}`,
+        "aimodel",
+        model.name,
+        model.content,
+        { section: "skills", category: "AI Models", name: model.name }
+      );
+    }
   }
 
   if (knowledge.contact?.details) {

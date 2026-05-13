@@ -291,6 +291,63 @@ export class MistralProvider extends AIProvider {
     }
   }
 
+  async generateStream(prompt, onChunk) {
+    if (!this.config.apiKey) throw new Error("Mistral API key not configured");
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
+
+    const response = await fetch(this.config.url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.config.apiKey}`,
+      },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: this.config.model,
+        messages: [{ role: "user", content: prompt }],
+        temperature: this.config.options.temperature,
+        max_tokens: this.config.options.max_tokens,
+        stream: true,
+      }),
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      throw new Error(`Mistral error: ${response.statusText} - ${errorData}`);
+    }
+
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let fullText = "";
+
+    for await (const chunk of response.body) {
+      buffer += decoder.decode(chunk, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop();
+
+      for (const line of lines) {
+        if (!line.startsWith("data: ")) continue;
+        const data = line.slice(6).trim();
+        if (data === "[DONE]") continue;
+
+        try {
+          const parsed = JSON.parse(data);
+          const content = parsed.choices?.[0]?.delta?.content;
+          if (content) {
+            fullText += content;
+            onChunk(content);
+          }
+        } catch {}
+      }
+    }
+
+    return fullText;
+  }
+
   isAvailable() {
     return this.config.apiKey !== undefined && this.config.apiKey !== "";
   }

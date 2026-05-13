@@ -67,7 +67,7 @@ export const AI_CONFIG = {
       timeout: 30000,
       options: {
         temperature: 0.8,
-        max_tokens: 800,
+        max_tokens: 400,
       },
     },
 

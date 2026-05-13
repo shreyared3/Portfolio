@@ -175,16 +175,6 @@ app.get("/api/stats/rate-limits", (req, res) => {
   }
 });
 
-// ----------------- Production: serve frontend -----------------
-if (process.env.NODE_ENV === "production") {
-  const staticPath = join(__dirname, "../frontend/dist");
-  app.use(express.static(staticPath));
-
-  app.get("*", (req, res) => {
-    res.sendFile(join(staticPath, "index.html"));
-  });
-}
-
 // ----------------- 404 Handler -----------------
 app.use("*", (req, res) => {
   res.status(404).json({
@@ -197,12 +187,14 @@ app.use("*", (req, res) => {
 // ----------------- Error Handling -----------------
 app.use(errorHandler);
 
-// ----------------- Start Server -----------------
-app.listen(PORT, () => {
-  console.log(`AI Portfolio Backend running on port ${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
-  console.log(`Health check: http://localhost:${PORT}/health`);
-});
+// ----------------- Start Server (local only) -----------------
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`AI Portfolio Backend running on port ${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
+    console.log(`Health check: http://localhost:${PORT}/health`);
+  });
+}
 
 // ----------------- Graceful Shutdown -----------------
 process.on("SIGTERM", () => {

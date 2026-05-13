@@ -11,7 +11,7 @@ import GeneralSection from "../sections/GeneralSection";
 import { ResponseRendererProps } from "../../types/chat";
 
 const ResponseRenderer: React.FC<ResponseRendererProps> = ({ interaction }) => {
-  if (interaction.isLoading) {
+  if (interaction.isLoading && !interaction.response) {
     return (
       <motion.div
         className="response-container"
@@ -49,6 +49,40 @@ const ResponseRenderer: React.FC<ResponseRendererProps> = ({ interaction }) => {
     );
   }
 
+  // Streaming in progress — render plain text, no markdown parsing overhead
+  if (interaction.isStreaming && interaction.response) {
+    return (
+      <motion.div
+        className="response-container"
+        style={{ textAlign: "center", marginBottom: 32, width: "100%" }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="response-wrapper" style={{ maxWidth: "42rem", margin: "0 auto" }}>
+          <div
+            className="p-8 text-left w-full"
+            style={{
+              background: "rgba(255,255,255,0.08)",
+              backdropFilter: "blur(24px)",
+              WebkitBackdropFilter: "blur(24px)",
+              border: "1px solid rgba(255,255,255,0.15)",
+              borderRadius: 20,
+              boxShadow: "0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08)",
+              whiteSpace: "pre-wrap",
+              color: "#0f172a",
+              lineHeight: 1.7,
+              fontSize: 15,
+            }}
+          >
+            {interaction.response}
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
+
+  // Done — render with full markdown
   if (interaction.structured) {
     return (
       <motion.div

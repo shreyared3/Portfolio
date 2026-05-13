@@ -29,6 +29,28 @@
         ]
       },
       {
+        "title": "LLM APIs & Models",
+        "items": [
+          "GPT-4o",
+          "GPT-4",
+          "GPT-3.5 Turbo",
+          "OpenAI Embeddings",
+          "Claude 3.5 Sonnet",
+          "Claude 3 Opus",
+          "Claude 3 Haiku",
+          "Gemini 1.5 Pro",
+          "Gemini 1.5 Flash",
+          "Gemini 2.0 Flash",
+          "Mistral Large",
+          "Mistral Small",
+          "Mistral Embeddings",
+          "Function Calling",
+          "Tool Use",
+          "Prompt Engineering",
+          "Context Window Optimization"
+        ]
+      },
+      {
         "title": "Languages",
         "items": [
           "Python",
@@ -262,5 +284,26 @@
       "LinkedIn": "https://www.linkedin.com/in/shreyar3",
       "GitHub": "https://github.com/shreyared3"
     }
+  },
+  "aiModels": {
+    "title": "AI Models & APIs Experience",
+    "items": [
+      {
+        "name": "OpenAI Models (GPT-4o, GPT-4, GPT-3.5 Turbo)",
+        "content": "I have hands-on experience with OpenAI's GPT model family across multiple production and personal projects. I use GPT-4o and GPT-4 for complex reasoning tasks, multi-step agent workflows, and high-quality text generation in RAG pipelines. GPT-3.5 Turbo is my go-to for cost-efficient chat completions where latency matters. I work with the OpenAI API via both direct REST calls and through LangChain integrations, using features like function calling and tool use to build structured AI agents. I've used OpenAI embeddings (text-embedding-3-small and text-embedding-ada-002) for semantic search and vector similarity in RAG systems, storing them in Pinecone and FAISS. In my procurement assistant at Cardinal Health, I evaluated GPT-4 for document Q&A over drug shortage policies before settling on the final stack."
+      },
+      {
+        "name": "Anthropic Claude Models (Claude 3.5 Sonnet, Claude 3 Opus, Claude 3 Haiku)",
+        "content": "I have worked with Anthropic's Claude model family and appreciate its strengths in long-context understanding, instruction-following, and safe, nuanced responses. Claude 3.5 Sonnet is my preferred model for tasks requiring deep reasoning and well-structured outputs — I've used it for code generation, document summarization, and complex multi-turn conversations. Claude 3 Opus handles the most demanding reasoning and analysis tasks where quality is the top priority. Claude 3 Haiku is excellent for fast, low-latency inference in production pipelines where cost efficiency is important. I interact with Claude via the Anthropic SDK and REST API, using system prompts and tool use to build agentic workflows. I've also experimented with Claude's large context window (up to 200K tokens) for ingesting full documents and codebases in a single prompt."
+      },
+      {
+        "name": "Google Gemini Models (Gemini 1.5 Pro, Gemini 1.5 Flash, Gemini 2.0 Flash)",
+        "content": "I have experience with Google's Gemini model family, particularly in the context of my work on Google Cloud Vertex AI at Cardinal Health. Gemini 1.5 Pro is a powerful model I've evaluated for multimodal tasks and long-context document understanding — its 1M token context window is impressive for processing large structured datasets. Gemini 1.5 Flash and Gemini 2.0 Flash are fast, cost-efficient models I've used for summarization and classification tasks within Vertex AI Pipelines. I access Gemini models both through the Vertex AI SDK for enterprise deployments and through the Gemini API (Google AI Studio) for prototyping. I've integrated Gemini into LangChain-based pipelines using the ChatGoogleGenerativeAI wrapper, and explored its native tool use and function calling capabilities for building agents on Google Cloud."
+      },
+      {
+        "name": "Mistral AI Models (Mistral Large, Mistral Small, Mistral Embeddings)",
+        "content": "I actively use Mistral AI models in production, including in this portfolio itself. Mistral Small powers the chat responses on this website, and Mistral Embeddings (mistral-embed) handles the semantic vector search over my knowledge base. I chose Mistral for this project because of its strong performance-to-cost ratio and excellent API reliability. Mistral Large is a capable model I've used for complex instruction-following and structured output generation. I've worked with the Mistral API directly (REST and streaming) and through LangChain integrations. The streaming API is particularly well-suited for real-time chat applications where perceived latency matters, which is why I implemented SSE-based streaming in this portfolio."
+      }
+    ]
   }
 }

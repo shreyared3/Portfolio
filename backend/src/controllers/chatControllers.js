@@ -1,10 +1,14 @@
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 import { getEmbedding } from "../lib/embeddings.js";
-import { generateText } from "../lib/generation.js";
+import { aiService } from "../lib/aiService.js";
+import { getCachedResponse, setCachedResponse } from "../lib/cache.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Load full index (documents + vectors)
-const indexPath = path.join(process.cwd(), "storage", "indexStore.json");
+const indexPath = path.join(__dirname, "../../storage", "indexStore.json");
 const indexData = JSON.parse(fs.readFileSync(indexPath, "utf-8"));
 const vectorsMap = new Map(indexData.vectors.map((v) => [v.id, v.embedding]));
 
@@ -117,58 +121,115 @@ function detectKeywordBias(message) {
   return null;
 }
 
+function cleanResponse(text) {
+  return text
+    .replace(/^(here('s| is) my (response|answer)[^:\n]*:?\s*)/im, "")
+    .replace(/^(based on (the |this )?context[^:\n]*:?\s*)/im, "")
+    .replace(/^(sure[!,.]?\s*)/im, "")
+    .replace(/^(certainly[!,.]?\s*)/im, "")
+    .replace(/^(of course[!,.]?\s*)/im, "")
+    .replace(/\(context fully covered[^)]*\)\s*$/im, "")
+    .replace(/\(no additions? needed[^)]*\)\s*$/im, "")
+    .replace(/\(note:[^)]*\)\s*$/im, "")
+    .replace(/^—\s+/gm, "- ")   // em dash bullet → proper markdown bullet
+    .trim();
+}
+
+const ABOUT_RE = /\b(who are you|about (your)?self|introduce yourself|tell me about you|your background|your profile|your summary)\b/i;
+
+function sendSSE(res, payload) {
+  res.write(`data: ${JSON.stringify(payload)}\n\n`);
+  if (res.flush) res.flush();
+}
+
+function startSSE(res) {
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  res.setHeader("X-Accel-Buffering", "no");
+  res.flushHeaders();
+}
+
 // ---------------- Chat Handler ----------------
 export async function chatHandler(req, res) {
-  try {
-    const { message } = req.body;
-    if (!message) return res.status(400).json({ error: "Message required" });
+  const { message } = req.body;
+  if (!message) return res.status(400).json({ error: "Message required" });
 
-    const queryEmbedding = await getEmbedding(message);
-    if (!queryEmbedding)
-      return res.status(400).json({ error: "Failed to generate embedding" });
+  // Cache hit — stream the cached text as a single chunk
+  const cacheKey = message.trim().toLowerCase();
+  const cached = getCachedResponse(cacheKey);
+  if (cached) {
+    startSSE(res);
+    sendSSE(res, { type: "chunk", content: cached.aiText });
+    sendSSE(res, { type: "done", finalText: cached.aiText });
+    return res.end();
+  }
 
-    const scoredDocs = indexData.documents
-      .map((doc) => {
-        const emb = vectorsMap.get(doc.id);
-        if (!emb) return null;
-        return {
-          section: doc.metadata.section,
-          id: doc.id,
-          score: cosineSim(queryEmbedding, emb),
-        };
-      })
+  // Embedding (runs before SSE so we can return a plain JSON error on failure)
+  const queryEmbedding = await getEmbedding(message);
+  if (!queryEmbedding)
+    return res.status(400).json({ error: "Failed to generate embedding" });
+
+  // Score and rank docs
+  const scoredDocs = indexData.documents
+    .map((doc) => {
+      const emb = vectorsMap.get(doc.id);
+      if (!emb) return null;
+      return { section: doc.metadata.section, id: doc.id, score: cosineSim(queryEmbedding, emb) };
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.score - a.score);
+
+  const isAboutMe = ABOUT_RE.test(message);
+  const isSalaryQuestion = /\b(salary|compensation|pay|rate|expectation|how much|what do you (expect|want|make)|package)\b/i.test(message);
+  const isComparison = /\b(difference|compare|vs\.?|versus|which is better|pros and cons|when to use|tradeoff|trade-off)\b/i.test(message);
+
+  let topDocs;
+  if (isAboutMe) {
+    // For "about me" — pull only about + most recent experience, skip skills entirely
+    const aboutDoc = indexData.documents.find((d) => d.id === "about:main");
+    const expDoc = indexData.documents.find((d) => d.id === "experience:0"); // most recent role
+    topDocs = [aboutDoc, expDoc].filter(Boolean);
+  } else {
+    topDocs = scoredDocs.slice(0, 3)
+      .map((s) => indexData.documents.find((d) => d.id === s.id))
       .filter(Boolean);
+  }
 
-    scoredDocs.sort((a, b) => b.score - a.score);
+  const context = topDocs.map((doc) => {
+    const meta = doc.metadata || {};
+    if (meta.section === "experience") {
+      return `[EXPERIENCE] ${meta.role} at ${meta.company} (${meta.period}): ${meta.highlights?.join("; ")}`;
+    }
+    if (meta.section === "projects" ) {
+      return `[${meta.section.toUpperCase()}] ${doc.title || meta.name || meta.role}: ${doc.content}`;
+    }
+    if (meta.section === "skills") {
+      return `[SKILLS] ${meta.category}: ${(meta.items || []).join(", ")}`;
+    }
+    if (meta.section === "availability") {
+      const base = `[AVAILABILITY] ${doc.content}`;
+      return isSalaryQuestion && meta.salaryExpectation
+        ? `${base}\nSalary expectation: ${meta.salaryExpectation}`
+        : base;
+    }
+    return `[${(meta.section || "").toUpperCase()}] ${doc.content}`;
+  }).join("\n\n");
 
-    // All chat questions are answered by the model using top relevant docs
-    {
-      const topDocs = scoredDocs.slice(0, 5).map((s) =>
-        indexData.documents.find((d) => d.id === s.id)
-      ).filter(Boolean);
+  const prompt = isAboutMe
+    ? `You are Shreya, a Senior AI/ML Engineer. Introduce yourself naturally in first person using only the context below.
 
-      const isSalaryQuestion = /\b(salary|compensation|pay|rate|expectation|how much|what do you (expect|want|make)|package)\b/i.test(message);
+Context:
+${context}
 
-      const context = topDocs.map((doc) => {
-        const meta = doc.metadata || {};
-        if (meta.section === "projects" || meta.section === "experience") {
-          return `[${meta.section.toUpperCase()}] ${doc.title || meta.name || meta.role}: ${doc.content}`;
-        }
-        if (meta.section === "skills") {
-          return `[SKILLS] ${meta.category}: ${(meta.items || []).join(", ")}`;
-        }
-        if (meta.section === "availability") {
-          const base = `[AVAILABILITY] ${doc.content}`;
-          return isSalaryQuestion && meta.salaryExpectation
-            ? `${base}\nSalary expectation: ${meta.salaryExpectation}`
-            : base;
-        }
-        return `[${(meta.section || "").toUpperCase()}] ${doc.content}`;
-      }).join("\n\n");
-
-      const isComparison = /\b(difference|compare|vs\.?|versus|which is better|pros and cons|when to use|tradeoff|trade-off)\b/i.test(message);
-
-      const prompt = `You are Shreya, a Senior AI/ML Engineer. Answer this question directly and specifically in first person using only the context below.
+Rules (follow strictly):
+- Write 3–4 sentences maximum as a flowing paragraph — no bullet points, no lists
+- Cover: who you are, your current role and industry, and the business impact you drive
+- Do NOT mention specific technologies, tools, frameworks, or programming languages
+- Focus on outcomes, industries, and the kind of problems you solve
+- Speak naturally and confidently, like a professional introduction
+- Do NOT start with phrases like "Here's my response", "Sure!", or any meta-commentary`
+    : `You are Shreya, a Senior AI/ML Engineer. Answer this question directly and specifically in first person using only the context below.
 
 User question: "${message}"
 
@@ -186,17 +247,29 @@ ${isComparison
 - Always answer in first person ("I", "my") from Shreya's perspective
 - Be specific — mention exact tools, projects, or numbers from the context
 - If the context doesn't mention the topic at all, say so honestly and mention related skills
-- Add 1–2 relevant emojis`;
+- Add 1–2 relevant emojis
+- Do NOT start with phrases like "Here's my response", "Based on the context", "Sure!", "Certainly!", or any meta-commentary — start directly with the answer
+- Do NOT end with phrases like "(Context fully covered)", "(No additions needed)", or any closing meta-note`;
 
-      const aiTextRaw = await generateText(prompt);
-      const aiText = aiTextRaw.includes("</think>")
-        ? aiTextRaw.split("</think>").pop().trim()
-        : aiTextRaw.trim();
+  // Start SSE — all errors from here onward are sent as SSE events
+  startSSE(res);
 
-      return res.json({ section: "general", structured: { type: "general" }, aiText });
-    }
+  try {
+    let rawText = "";
+    await aiService.generateStream(prompt, (chunk) => {
+      rawText += chunk;
+      sendSSE(res, { type: "chunk", content: chunk });
+    });
+
+    const stripped = rawText.includes("</think>")
+      ? rawText.split("</think>").pop().trim()
+      : rawText.trim();
+    const finalText = cleanResponse(stripped);
+
+    setCachedResponse(cacheKey, { aiText: finalText });
+    sendSSE(res, { type: "done", finalText });
   } catch (err) {
-    console.error(`Chat handler error:`, err.message);
+    console.error("Chat stream error:", err.message);
 
     const isOverloaded =
       err.message.includes("429") ||
@@ -204,16 +277,14 @@ ${isComparison
       err.message.includes("Too Many Requests") ||
       err.message.includes("service_tier_capacity_exceeded");
 
-    if (isOverloaded) {
-      return res.status(503).json({
-        error: "service_overloaded",
-        message: "The AI service is a little busy right now. Please wait a few seconds and try again. 🙏",
-      });
-    }
-
-    res.status(500).json({
-      error: "Failed to process chat message",
-      details: process.env.NODE_ENV === "development" ? err.message : undefined,
+    sendSSE(res, {
+      type: "error",
+      code: isOverloaded ? "service_overloaded" : "generation_failed",
+      message: isOverloaded
+        ? "The AI service is a little busy right now. Please wait a few seconds and try again. 🙏"
+        : "Something went wrong generating a response. Please try again.",
     });
   }
+
+  res.end();
 }
