@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 import { generateText } from "../lib/generation.js";
 import {
   getCachedResponse,
@@ -7,7 +8,8 @@ import {
   clearCache,
 } from "../lib/cache.js";
 
-const indexPath = path.join(process.cwd(), "storage", "indexStore.json");
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const indexPath = path.join(__dirname, "../../storage", "indexStore.json");
 const index = JSON.parse(fs.readFileSync(indexPath, "utf-8"));
 
 // Clear cache on startup to ensure fresh responses
