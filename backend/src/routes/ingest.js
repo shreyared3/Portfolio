@@ -123,6 +123,20 @@ export async function ingestData() {
     );
   }
 
+  if (knowledge.aiModels?.items) {
+    for (let i = 0; i < knowledge.aiModels.items.length; i++) {
+      const model = knowledge.aiModels.items[i];
+      await addDocument(
+        index,
+        `aimodel:${i}`,
+        "aimodel",
+        model.name,
+        model.content,
+        { section: "skills", category: "AI Models", name: model.name }
+      );
+    }
+  }
+
   if (knowledge.contact?.details) {
     const content = `Email: ${knowledge.contact.details.email}, Phone: ${knowledge.contact.details.phone}, LinkedIn: ${knowledge.contact.details.LinkedIn}, GitHub: ${knowledge.contact.details.GitHub}`;
     await addDocument(

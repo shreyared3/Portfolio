@@ -22,10 +22,7 @@ export const useChat = (initialQuery?: string) => {
 
   const handleSendMessage = useCallback(
     async (message?: string) => {
-      // Block if rate limited
-      if (isRateLimited) {
-        return;
-      }
+      if (isRateLimited) return;
 
       const question = message ?? inputValue;
       if (!question.trim()) return;
@@ -33,55 +30,80 @@ export const useChat = (initialQuery?: string) => {
       setInputValue("");
       setIsLoading(true);
 
+      const interactionId = Date.now().toString();
       const newInteraction: ChatInteraction = {
-        id: Date.now().toString(),
+        id: interactionId,
         question,
         response: "",
         timestamp: new Date(),
         isLoading: true,
+        isStreaming: true,
       };
 
       setCurrentInteraction(newInteraction);
 
-      try {
-        const resData = await apiService.sendChatMessage(question);
-        const aiText = resData.aiText;
-        const structured = resData.structured;
+      let streamedText = "";
+      let rafId: number | null = null;
 
-        setCurrentInteraction({
-          ...newInteraction,
-          response: aiText,
-          structured,
-          isLoading: false,
-        });
-      } catch (err: any) {
-        const errorMessage =
-          err?.message || "Something went wrong. Please try again.";
+      await apiService.sendChatMessageStream(
+        question,
+        (chunk) => {
+          streamedText += chunk;
+          if (rafId === null) {
+            rafId = requestAnimationFrame(() => {
+              rafId = null;
+              const text = streamedText;
+              setCurrentInteraction((prev) =>
+                prev?.id === interactionId
+                  ? { ...prev, response: text, isLoading: true }
+                  : prev
+              );
+            });
+          }
+        },
+        (finalText) => {
+          if (rafId !== null) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
+          }
+          setCurrentInteraction((prev) =>
+            prev?.id === interactionId
+              ? { ...prev, response: finalText || streamedText, structured: { type: "general" }, isLoading: false, isStreaming: false }
+              : prev
+          );
+          setIsLoading(false);
+        },
+        (err) => {
+          if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+          const errorMessage = err?.message || "Something went wrong. Please try again.";
+          const isHardRateLimit =
+            errorMessage.includes("explored quite a bit") ||
+            errorMessage.includes("rate limit");
+          const isServiceBusy =
+            errorMessage.includes("busy right now") ||
+            errorMessage.includes("wait a few seconds");
 
-        const isHardRateLimit =
-          errorMessage.includes("explored quite a bit") ||
-          errorMessage.includes("rate limit");
+          if (isHardRateLimit) {
+            setIsRateLimited(true);
+            setRateLimitMessage(errorMessage);
+          }
 
-        const isServiceBusy =
-          errorMessage.includes("busy right now") ||
-          errorMessage.includes("wait a few seconds");
-
-        if (isHardRateLimit) {
-          setIsRateLimited(true);
-          setRateLimitMessage(errorMessage);
+          setCurrentInteraction((prev) =>
+            prev?.id === interactionId
+              ? {
+                  ...prev,
+                  response: isServiceBusy ? "⚠️ " + errorMessage : errorMessage,
+                  structured: undefined,
+                  isLoading: false,
+                }
+              : prev
+          );
+          setIsLoading(false);
         }
+      );
 
-        setCurrentInteraction({
-          ...newInteraction,
-          response: isServiceBusy
-            ? "⚠️ " + errorMessage
-            : errorMessage,
-          structured: undefined,
-          isLoading: false,
-        });
-      } finally {
-        setIsLoading(false);
-      }
+      // Safety net in case onDone/onError never fires
+      setIsLoading(false);
     },
     [inputValue, isRateLimited]
   );

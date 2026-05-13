@@ -4,6 +4,7 @@ export interface ChatInteraction {
   response: string;
   timestamp: Date;
   isLoading?: boolean;
+  isStreaming?: boolean;
   structured?: any;
 }
 

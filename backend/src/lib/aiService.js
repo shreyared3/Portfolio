@@ -146,6 +146,24 @@ class AIService {
   }
 
   /**
+   * Stream text generation chunk by chunk.
+   * Falls back to a single-chunk emit if the active provider doesn't support streaming.
+   * @returns {Promise<string>} full accumulated text
+   */
+  async generateStream(prompt, onChunk) {
+    if (!this.activeProvider) throw new Error("No AI provider available");
+
+    if (typeof this.activeProvider.generateStream === "function") {
+      return await this.activeProvider.generateStream(prompt, onChunk);
+    }
+
+    // Fallback: non-streaming provider — emit full response as one chunk
+    const text = await this.generate(prompt);
+    onChunk(text);
+    return text;
+  }
+
+  /**
    * Get current provider info
    */
   getProviderInfo() {
