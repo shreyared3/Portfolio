@@ -1,11 +1,14 @@
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 import { getEmbedding } from "../lib/embeddings.js";
 import { aiService } from "../lib/aiService.js";
 import { getCachedResponse, setCachedResponse } from "../lib/cache.js";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 // Load full index (documents + vectors)
-const indexPath = path.join(process.cwd(), "storage", "indexStore.json");
+const indexPath = path.join(__dirname, "../../storage", "indexStore.json");
 const indexData = JSON.parse(fs.readFileSync(indexPath, "utf-8"));
 const vectorsMap = new Map(indexData.vectors.map((v) => [v.id, v.embedding]));
 
